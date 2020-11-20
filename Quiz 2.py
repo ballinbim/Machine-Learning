@@ -4,42 +4,45 @@ AnimalClass = pd.read_csv('animal_classes.csv')
 AnimalTest = pd.read_csv('animals_test.csv')
 AnimalTrain = pd.read_csv('animals_train.csv')
 
-print(AnimalClass.head())
-print()
-print(AnimalTrain.head())
-print()
-print(AnimalTest.head())
+train_df = AnimalTrain.iloc[:, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]]
+target = AnimalTrain.iloc[:, [16]]
+
+# print(AnimalClass.head())
+# print(AnimalTrain)
+# # print(AnimalTest.head())
+# print(train_df)
+# print(target)
 
 
-# from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split
 
-# x_train, x_test, y_train, y_test = train_test_split(
-#     AnimalTrain.class_number.values.reshape(-1, 1),  AnimalTest.legs.values
-# )
+x_train, x_test, y_train, y_test = train_test_split(train_df,  target)
 
-x_train = AnimalTrain
+# print(x_train.shape)
+# print(x_test.shape)
+# print(y_train.shape)
+print(y_test.shape)
 
-# # print(x_train.shape)
-# # print(x_test.shape)
-# # print(y_train.shape)
-# # print(y_test.shape)
+from sklearn.neighbors import KNeighborsClassifier
 
-from sklearn.linear_model import LinearRegression
-linear_regression = LinearRegression()
-linear_regression.fit(X = x_train, y = y_train)
+knn = KNeighborsClassifier()
 
-# for i, name in enumerate(cali.feature_names):
-#     print(f"{name:>10}: {linear_regression.coef_[i]}")
+test_df = AnimalTest.iloc[:, [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]]
+print(test_df)
 
-# predicted = linear_regression.predict(x_test)
-# print(predicted[:5])    # View the first 5 predictions
+# load the training data into the model using the fit method
 
-# expected = y_test 
-# print(expected[:5])     # view the first 5 expected target values
+knn.fit(X = x_train, y = y_train)
 
-# #Create a DataFrame containing columns for the expected and predicted values:
+predicted = knn.predict(X = x_test)
+expected = y_test
 
-# df = pd.DataFrame()
+# print(predicted[:20])
+# print(expected[:20])
 
-# df["Expected"] = pd.Series(expected)
-# df["Predicted"] = pd.Series(predicted)
+from sklearn.metrics import confusion_matrix
+cf = confusion_matrix(y_true= expected, y_pred= predicted)
+# print(cf)
+
+
+
